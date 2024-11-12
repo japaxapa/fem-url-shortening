@@ -1,7 +1,11 @@
 import { AppBar, IconButton, Stack, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-export default function NavigationBar() {
+interface NavigationBarProps {
+  onMenuClick: () => void;
+}
+
+export default function NavigationBar({ onMenuClick }: NavigationBarProps) {
   return (
     <AppBar
       position="static"
@@ -26,7 +30,10 @@ export default function NavigationBar() {
           >
             Shortly
           </Typography>
-          <IconButton sx={{ height: "2rem", width: "2rem" }}>
+          <IconButton
+            sx={{ height: "2rem", width: "2rem" }}
+            onClick={onMenuClick}
+          >
             <MenuIcon sx={{ height: "2rem", width: "2rem" }} />
           </IconButton>
         </Stack>

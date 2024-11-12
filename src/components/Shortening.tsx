@@ -1,9 +1,37 @@
 import { Box, Button, Stack, TextField } from "@mui/material";
+import { BaseSyntheticEvent, useState } from "react";
 
 export default function Shortening() {
+  const [longURL, setLongURL] = useState("");
+
+  const handleChange = (e: BaseSyntheticEvent) => {
+    setLongURL(e.target.value);
+  };
+
+  async function handleSubmit(e: BaseSyntheticEvent) {
+    e.preventDefault();
+    await fetch("https://api-ssl.bitly.com/v4/shorten", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_REACT_APP_BITLY_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        long_url: longURL,
+        domain: "bit.ly",
+        group_guid: `${import.meta.env.VITE_REACT_APP_GUID}`,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log({ data });
+      });
+  }
+
   return (
     <Stack>
-      <Box sx={{ height: "8rem" }}></Box>
+      <Box sx={{ height: "8rem" }} />
       <Stack
         sx={{ bgcolor: "neutralGViolet.main", padding: "2rem 2rem 0 2rem" }}
       >
@@ -20,13 +48,16 @@ export default function Shortening() {
             <TextField
               id="shortenLink"
               label={"Shorten a link here..."}
-              variant="outlined"
+              variant="filled"
+              color="black"
               sx={{
                 width: "100%",
                 bgcolor: "white",
                 marginBottom: "1rem",
                 borderRadius: ".5rem",
               }}
+              value={longURL}
+              onChange={handleChange}
             />
             <Button
               sx={{
@@ -36,6 +67,7 @@ export default function Shortening() {
                 borderRadius: ".5rem",
                 paddingY: ".7rem",
               }}
+              onClick={handleSubmit}
             >
               Shorten it!
             </Button>
